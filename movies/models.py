@@ -2,9 +2,6 @@ from datetime import date
 from django.db import models
 
 
-today = date.today()
-
-
 class Category(models.Model):
     """Категория"""
 
@@ -24,7 +21,7 @@ class Actor(models.Model):
     """Актеры и Режисеры"""
 
     name = models.CharField("Имя", max_length=100)
-    dob = models.DateField("Дата Рождения")
+    dob = models.DateField("Дата Рождения", default=date.today)
     description = models.TextField("Описание")
     image = models.ImageField(upload_to="actors/%Y/%m/%d", verbose_name="Изображение")
 
@@ -36,6 +33,7 @@ class Actor(models.Model):
         return self.name
 
     def age(self):
+        today = date.today()
         return (
             today.year
             - self.dob.year
@@ -74,7 +72,7 @@ class Movie(models.Model):
         Actor, verbose_name="актеры", related_name="film_actor"
     )
     genres = models.ManyToManyField(Genre, verbose_name="жанры")
-    world_premiere = models.DateField("Премьера в мире", default=today)
+    world_premiere = models.DateField("Премьера в мире", default=date.today)
     budget = models.PositiveIntegerField(
         "Бюджет", default=0, help_text="указать сумму в долларах"
     )
