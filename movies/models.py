@@ -1,5 +1,10 @@
 from datetime import date
+from this import d
 from django.db import models
+from django.urls import reverse
+
+
+from movies.services.utils import unique_slugify
 
 
 class Category(models.Model):
@@ -23,6 +28,7 @@ class Actor(models.Model):
     name = models.CharField("Имя", max_length=100)
     dob = models.DateField("Дата Рождения", default=date.today)
     description = models.TextField("Описание")
+    url = models.SlugField(max_length=250, blank=True)
     image = models.ImageField(upload_to="actors/%Y/%m/%d", verbose_name="Изображение")
 
     class Meta:
@@ -39,6 +45,11 @@ class Actor(models.Model):
             - self.dob.year
             - ((today.month, today.day) < (self.dob.month, self.dob.day))
         )
+
+    def save(self, *args, **kwargs):
+        if not self.url:
+            self.url = unique_slugify(self, self.name)
+        return super().save(*args, **kwargs)
 
 
 class Genre(models.Model):
@@ -97,13 +108,19 @@ class Movie(models.Model):
         return self.title
 
     def proper_budget(self):
-        return f"{self.budget:_}".replace("_", " ")
+        return f"{self.budget:_}".replace("_", " ") if self.budget else 'Не известно'
 
     def proper_fees_in_usa(self):
-        return f"{self.fees_in_usa:_}".replace("_", " ")
+        return f"{self.fees_in_usa:_}".replace("_", " ") if self.fees_in_usa else 'Не известно'
 
     def proper_fees_in_world(self):
-        return f"{self.fees_in_world:_}".replace("_", " ")
+        return f"{self.fees_in_world:_}".replace("_", " ") if self.fees_in_world else 'Не известно'
+
+    def get_absolute_url(self):
+        return reverse('movie_detail', kwargs={'slug': self.url})
+
+    def get_review(self):
+        return self.reviews_set.filter(parent__isnull=True)
 
 
 class MovieShots(models.Model):

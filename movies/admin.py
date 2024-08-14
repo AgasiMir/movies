@@ -42,12 +42,20 @@ class GenreAdmin(admin.ModelAdmin):
 
 @admin.register(Movie)
 class MovieAdmin(admin.ModelAdmin):
+    list_display = ['image', 'title', 'category']
+    list_display_links = ['image', 'title']
     prepopulated_fields = {"url": ("title",)}
 
-    raw_id_fields = ["actors"]
+    # raw_id_fields = ["actors"]
+
+    @admin.display(description='постер')
+    def image(self, movie: Movie):
+        if movie.poster:
+            return mark_safe(f"<img src={movie.poster.url} width=120>")
+        return 'Нет постера'
 
 
+admin.site.register(Reviews)
 admin.site.register(MovieShots)
 admin.site.register(RatingStar)
 admin.site.register(Rating)
-admin.site.register(Reviews)
