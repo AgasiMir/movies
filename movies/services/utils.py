@@ -12,6 +12,6 @@ def unique_slugify(instance, name):
     unique_slug = slugify(unidecode(name))
 
     while model.objects.filter(url=unique_slug).exists():
-        unique_slug = f"{unique_slug} - {uuid4().hex[:8]}"
+        unique_slug = f"{unique_slug}-{uuid4().hex[:8]}"
 
     return unique_slug

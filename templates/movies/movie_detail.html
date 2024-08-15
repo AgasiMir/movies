@@ -30,25 +30,29 @@
                 <li style="list-style: none">
                     <span><b>Режиссер:</b> 
                         {% for director in movie.directors.all %}
-                            {{director.name}}
+                        <ul>
+                            <li style="list-style: none">
+                                <a href="{{director.get_absolute_url}}"><span style='margin-left:10px'>{{director.name}}</span></a>
+                            </li>
+                        </ul>
                         {% endfor %}
                     </span></li>
                 <li style="list-style: none"><span><b>Актеры:</b> 
                     {% for actor in movie.actors.all  %}
                     <ul>
                         <li style="list-style: none">
-                            <span style='margin-left:10px'>{{actor.name}}</span>
-                        </li style="list-style: none">
+                         <a href="{{actor.get_absolute_url}}"> <span style='margin-left:10px'>{{actor.name}}</span></a>
+                        </li>
                     </ul>
                     {% endfor %}
                 </span></li>
                 <li style="list-style: none"><span><b>Жанр:</b>
                     {% for genre in movie.genres.all  %}
-                        {{genre}}
+                        {{genre|join:", "}}
                     {% endfor %}
                 </span>
                 </li>
-                <li style="list-style: none"><span><b>Премьера в мире:</b> {{movie.world_premiere}}</span>
+                <li style="list-style: none"><span><b>Премьера в мире:</b>{{movie.world_premiere}}</span>
                 </li>
                 <li style="list-style: none">
                     <span><b>Бюджет:</b> ${{movie.proper_budget}}</span></li>

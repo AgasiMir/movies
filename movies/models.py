@@ -21,6 +21,9 @@ class Category(models.Model):
     def __str__(self) -> str:
         return self.name
 
+    def get_absolute_url(self):
+        return reverse("categories", kwargs={"slug": self.url})
+    
 
 class Actor(models.Model):
     """Актеры и Режисеры"""
@@ -50,6 +53,9 @@ class Actor(models.Model):
         if not self.url:
             self.url = unique_slugify(self, self.name)
         return super().save(*args, **kwargs)
+
+    def get_absolute_url(self):
+        return reverse("actor", kwargs={"slug": self.url})
 
 
 class Genre(models.Model):
