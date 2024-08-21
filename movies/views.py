@@ -95,19 +95,6 @@ class AddReview(View):
         return redirect(form.movie.get_absolute_url())
 
 
-# class AddReview(CreateView):
-#     """Отзывы"""
-
-#     form_class = ReviewForm
-
-#     def form_valid(self, form):
-#         review = form.save(commit=False)
-#         review.movie_id = self.kwargs.get("pk")
-#         review.save()
-
-#         return redirect(review.movie.get_absolute_url())
-
-
 class FilterMoviesView(MixinView, ListView):
     """Фильтр Фильмов"""
 

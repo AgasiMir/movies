@@ -23,7 +23,7 @@ class Category(models.Model):
 
     def get_absolute_url(self):
         return reverse("categories", kwargs={"slug": self.url})
-    
+
 
 class Actor(models.Model):
     """Актеры и Режисеры"""
@@ -114,16 +114,24 @@ class Movie(models.Model):
         return self.title
 
     def proper_budget(self):
-        return f"{self.budget:_}".replace("_", " ") if self.budget else 'Не известно'
+        return f"{self.budget:_}".replace("_", " ") if self.budget else "Не известно"
 
     def proper_fees_in_usa(self):
-        return f"{self.fees_in_usa:_}".replace("_", " ") if self.fees_in_usa else 'Не известно'
+        return (
+            f"{self.fees_in_usa:_}".replace("_", " ")
+            if self.fees_in_usa
+            else "Не известно"
+        )
 
     def proper_fees_in_world(self):
-        return f"{self.fees_in_world:_}".replace("_", " ") if self.fees_in_world else 'Не известно'
+        return (
+            f"{self.fees_in_world:_}".replace("_", " ")
+            if self.fees_in_world
+            else "Не известно"
+        )
 
     def get_absolute_url(self):
-        return reverse('movie_detail', kwargs={'slug': self.url})
+        return reverse("movie_detail", kwargs={"slug": self.url})
 
     def get_review(self):
         return self.reviews_set.filter(parent__isnull=True)
