@@ -1,11 +1,11 @@
 from django.db.models import Q, Count
-from django.http.response import JsonResponse
+from django.http.response import HttpResponse, JsonResponse
 from django.shortcuts import redirect
 from django.views import View
 from django.views.generic import CreateView, DetailView, ListView
 
-from movies.models import Actor, Category, Genre, Movie
-from .forms import ReviewForm
+from movies.models import Actor, Category, Genre, Movie, Rating
+from .forms import ReviewForm, RatingForm
 
 
 class MixinView:
@@ -53,6 +53,7 @@ class MoviesDetailView(MixinView, DetailView):
         context["title"] = context["movie"].title
         # context['title'] = self.object.title
         # context['title'] = Movie.objects.get(url=self.kwargs['url']).title
+        context['star_form'] = RatingForm()
         return self.get_mixin_context(context)
 
 
@@ -135,3 +136,26 @@ class JsonFilterMoviesView(ListView):
     def get(self, request, *args, **kwargs):
         queryset = list(self.get_queryset())
         return JsonResponse({"movies": queryset}, safe=False)
+
+
+class AddStarRating(View):
+    """Добавление рейтинга фильму"""
+
+    def get_client_ip(self, request):
+        x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
+        if x_forwarded_for:
+            ip = x_forwarded_for.split(',')[0]
+        else:
+            ip = request.META.get('REMOTE_ADDR')
+        return ip
+
+    def post(self, request):
+        form = RatingForm(data=request.POST)
+        if form.is_valid():
+            Rating.objects.update_or_create(
+                ip=self.get_client_ip(request),
+                movie_id=int(request.POST.get('movie')),
+                defaults={'star_id': int(request.POST.get('star'))}
+            )
+            return HttpResponse(status=201)
+        return HttpResponse(status=400)

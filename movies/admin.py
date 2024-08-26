@@ -79,9 +79,24 @@ class ReviewsAdmin(admin.ModelAdmin):
     readonly_fields = ["name", "text", "email", "parent", "movie"]
 
 
+@admin.register(Rating)
+class RatingAdmin(admin.ModelAdmin):
+    list_display = ['film_poster', 'movie', 'star', 'ip']
+    list_display_links = ['film_poster', 'movie']
+    list_per_page = 5
+
+    readonly_fields = ['movie', 'star', 'ip', 'film_poster']
+
+
+    @admin.display(description='Изображение')
+    def film_poster(self, rating: Rating):
+        if rating.movie.poster:
+            return mark_safe(f"<img src={rating.movie.poster.url} width=80>")
+        return 'Нет фото'
+
 admin.site.register(MovieShots)
 admin.site.register(RatingStar)
-admin.site.register(Rating)
+
 
 
 admin.site.site_title = 'Фильмы и Сериалы'
