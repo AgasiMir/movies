@@ -12,6 +12,13 @@ class MixinView:
     template_name = "movies/movie_list.html"
     context_object_name = "movie_list"
 
+    def get_template_names(self):
+        if "big" in self.request.GET:
+            return ["movies/movie_list.html"]
+        if 'small' in self.request.GET:
+            return ["movies/movie_list_2.html"]
+        return super().get_template_names()
+
     def get_mixin_context(self, context):
         context["category"] = (
             Category.objects.annotate(total=Count("movie__id"))
@@ -33,7 +40,8 @@ class MoviesView(MixinView, ListView):
     """Список фильмов"""
 
     queryset = Movie.objects.filter(draft=False)
-    extra_context = {"title": "Главная"}
+    extra_context = {"title": "Фильмы и Сериалы"}
+    paginate_by = 9
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -58,6 +66,10 @@ class MoviesDetailView(MixinView, DetailView):
 
 
 class CategoryView(MixinView, ListView):
+    """Категории"""
+
+    paginate_by = 9
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["title"] = context["movie_list"][0].category.name
@@ -99,11 +111,13 @@ class AddReview(View):
 class FilterMoviesView(MixinView, ListView):
     """Фильтр Фильмов"""
 
+    paginate_by = 9
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['year'] = ''.join([f"Год: {i} " for i in self.request.GET.getlist('year')])
-        context['genre'] = ''.join([f"Жанр: {i} " for i in self.request.GET.getlist('genre')])
-        context['title'] = f"{context['year']} {context['genre']}"
+        context['year'] = ''.join([f"year={i}&" for i in self.request.GET.getlist('year')])
+        context['genre'] = ''.join([f"genre={i}&" for i in self.request.GET.getlist('genre')])
+        context['title'] = 'Жанры и Года'
         return self.get_mixin_context(context)
 
     def get_queryset(self):
@@ -114,7 +128,7 @@ class FilterMoviesView(MixinView, ListView):
         if 'genre' in self.request.GET:
             my_q &= Q(genres__name__in=self.request.GET.getlist('genre'))
 
-        return Movie.objects.filter(my_q)
+        return Movie.objects.filter(my_q).distinct()
 
 
 class JsonFilterMoviesView(ListView):
