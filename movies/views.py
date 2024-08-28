@@ -173,3 +173,19 @@ class AddStarRating(View):
             )
             return HttpResponse(status=201)
         return HttpResponse(status=400)
+
+
+class Search(MixinView, ListView):
+    """Поиск фильмов"""
+
+    paginate_by = 9
+    search_obj = None
+
+    def get_queryset(self):
+        if 'q' in self.request.GET:
+            self.__class__.search_obj = self.request.GET.get('q').capitalize()
+        return Movie.objects.filter(title__icontains=self.__class__.search_obj)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        return self.get_mixin_context(context)
