@@ -3,43 +3,28 @@
 
 
 
-
-        <!--//main-content-->
-        <!---->
-        <!---->
-        <!-- banner -->
-       
-                    
-                    <!-- //product left -->
-                    <!-- product right -->
-                    {% block movie %}
-                    <div class="left-ads-display col-lg-9">
-                        <div class="row">
-                            {% for movie in movie_list %}
-                            <div class="col-md-3 product-men">
-                                <div  >
-                                    <div class="men-thumb-item">
-                                        <a href="{{ movie.get_absolute_url }}">
-                                            <img src="{{movie.poster.url}}" class="img-fluid" alt="" >
-                                        </a>
-                                    </div>
-                                    <br>
-                                    {% comment %} <div class="item-info-product">
-                                        <h4 class="">
-                                            <a href="{{movie.get_absolute_url}}" class="editContent" >{{ movie.title }}</a>
-                                        </h4>
-                                    </div> {% endcomment %}
-                                </div>
-                            </div>
-                            {% endfor %}
-                        </div>
-                        <!--<div class="grid-img-right mt-4 text-right bg bg1" >
-                            <span class="money editContent" >Flat 50% Off</span>
-                            <a href="moviesingle.html" class="btn" >Now</a>
-                        </div>-->
-                        {% include "include/pagination.html" %}
+    {% block movie %}
+    <div class="left-ads-display col-lg-9">
+        <div class="row">
+            {% for movie in movie_list %}
+            <div class="col-md-3 product-men">
+                <div  >
+                    <div class="men-thumb-item">
+                        <a href="{{ movie.get_absolute_url }}">
+                            <img src="{{movie.poster.url}}" class="img-fluid" alt="" >
+                        </a>
                     </div>
-              
-        <!-- //contact -->
-        
+                    <br>
+                    {% comment %} <div class="item-info-product">
+                        <h4 class="">
+                            <a href="{{movie.get_absolute_url}}" class="editContent" >{{ movie.title }}</a>
+                        </h4>
+                    </div> {% endcomment %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% include "include/pagination.html" %}
+    </div>
+                      
 {% endblock movie %}

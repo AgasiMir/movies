@@ -20,6 +20,7 @@
                 <ul>
                     <li>
                         <span><b>Возраст:</b> {{ actor.age }} лет</span></li>
+                    {% if actor.film_director.all %}
                     <li>
                         <span><b>Режиссер:</b>
                             {% for movie in actor.film_director.all %}
@@ -29,6 +30,8 @@
                             {% endfor %}
                         </span>
                     </li>
+                    {% endif %}
+                    {% if actor.film_actor.all %}
                     <li><span><b>Актер:</b>
                         {% for movie in actor.film_actor.all %}
                         <ul>
@@ -37,6 +40,7 @@
                         {% endfor %}
                     </span>
                     </li>
+                    {% endif %}
                 </ul>
             </div>
         </div>
@@ -49,42 +53,5 @@
             </p>
             <br>
         </div>
-        {% comment %} <div class="left-ads-display col-lg-9">
-            <div class="row">
-                {% for movie in actor.film_actor.all %}
-                <div class="col-md-4 product-men">
-                    <div>
-                        <div class="men-thumb-item">
-                            <a href="{{ movie.get_absolute_url }}">
-                                <img src="{{movie.poster.url}}" class="img-fluid" alt="" >
-                            </a>
-                        </div>
-                        <div class="item-info-product">
-                            <h4 >
-                                <a href="{{movie.get_absolute_url}}" class="editContent" >{{ movie.title }}</a>
-                            </h4>
-                        </div>
-                    </div>
-                </div>
-                {% endfor %}
-
-                <div class="left-ads-display col-lg-9">
-                    <div class="row">
-                        {% for movie in actor.film_director.all %}
-                        <div class="col-md-4 product-men">
-                            <div>
-                                <div class="men-thumb-item">
-                                    <a href="{{ movie.get_absolute_url }}">
-                                        <img src="{{movie.poster.url}}" class="img-fluid" alt="" >
-                                    </a>
-                                </div>
-                                <div class="item-info-product">
-                                    <h4 >
-                                        <a href="{{movie.get_absolute_url}}" class="editContent" >{{ movie.title }}</a>
-                                    </h4>
-                                </div>
-                            </div>
-                        </div>
-                        {% endfor %} {% endcomment %}
     </div>
 {% endblock movie %}
