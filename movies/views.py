@@ -15,15 +15,14 @@ class MixinView:
     def get_template_names(self):
         if "big" in self.request.GET:
             return ["movies/movie_list.html"]
-        if 'small' in self.request.GET:
+        if "small" in self.request.GET:
             return ["movies/movie_list_2.html"]
         return super().get_template_names()
 
     def get_mixin_context(self, context):
-        context["category"] = (
-            Category.objects.annotate(total=Count("movie__id"))
-            .filter(total__gte=1)
-        )
+        context["category"] = Category.objects.annotate(
+            total=Count("movie__id")
+        ).filter(total__gte=1)
         # context['category'] = Category.objects.raw('''
         #                                             SELECT DISTINCT movies_category.id,
         #                                                     movies_category.name
@@ -32,7 +31,7 @@ class MixinView:
         #                                             movies_category.id
         #                                         ''')
         context["genres"] = Genre.objects.all()
-        context['get_year'] = Movie.objects.filter(draft=False).values('year')
+        context["get_year"] = Movie.objects.filter(draft=False).values("year")
         return context
 
 
@@ -61,7 +60,7 @@ class MoviesDetailView(MixinView, DetailView):
         context["title"] = context["movie"].title
         # context['title'] = self.object.title
         # context['title'] = Movie.objects.get(url=self.kwargs['url']).title
-        context['star_form'] = RatingForm()
+        context["star_form"] = RatingForm()
         return self.get_mixin_context(context)
 
 
@@ -115,18 +114,22 @@ class FilterMoviesView(MixinView, ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['year'] = ''.join([f"year={i}&" for i in self.request.GET.getlist('year')])
-        context['genre'] = ''.join([f"genre={i}&" for i in self.request.GET.getlist('genre')])
-        context['title'] = 'Жанры и Года'
+        context["year"] = "".join(
+            [f"year={i}&" for i in self.request.GET.getlist("year")]
+        )
+        context["genre"] = "".join(
+            [f"genre={i}&" for i in self.request.GET.getlist("genre")]
+        )
+        context["title"] = "Жанры и Года"
         return self.get_mixin_context(context)
 
     def get_queryset(self):
         my_q = Q()
 
-        if 'year' in self.request.GET:
-            my_q = Q(year__in=self.request.GET.getlist('year'))
-        if 'genre' in self.request.GET:
-            my_q &= Q(genres__name__in=self.request.GET.getlist('genre'))
+        if "year" in self.request.GET:
+            my_q = Q(year__in=self.request.GET.getlist("year"))
+        if "genre" in self.request.GET:
+            my_q &= Q(genres__name__in=self.request.GET.getlist("genre"))
 
         return Movie.objects.filter(my_q).distinct()
 
@@ -134,17 +137,19 @@ class FilterMoviesView(MixinView, ListView):
 class JsonFilterMoviesView(ListView):
     """Фильтр Фильмов JSON"""
 
-
     def get_queryset(self):
         my_q = Q()
 
-        if 'year' in self.request.GET:
-            my_q = Q(year__in=self.request.GET.getlist('year'))
-        if 'genre' in self.request.GET:
-            my_q &= Q(genres__name__in=self.request.GET.getlist('genre'))
+        if "year" in self.request.GET:
+            my_q = Q(year__in=self.request.GET.getlist("year"))
+        if "genre" in self.request.GET:
+            my_q &= Q(genres__name__in=self.request.GET.getlist("genre"))
 
-        queryset =  Movie.objects.filter(my_q
-        ).distinct().values('title', 'tagline', 'url', 'poster')
+        queryset = (
+            Movie.objects.filter(my_q)
+            .distinct()
+            .values("title", "tagline", "url", "poster")
+        )
         return queryset
 
     def get(self, request, *args, **kwargs):
@@ -156,11 +161,11 @@ class AddStarRating(View):
     """Добавление рейтинга фильму"""
 
     def get_client_ip(self, request):
-        x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
+        x_forwarded_for = request.META.get("HTTP_X_FORWARDED_FOR")
         if x_forwarded_for:
-            ip = x_forwarded_for.split(',')[0]
+            ip = x_forwarded_for.split(",")[0]
         else:
-            ip = request.META.get('REMOTE_ADDR')
+            ip = request.META.get("REMOTE_ADDR")
         return ip
 
     def post(self, request):
@@ -168,8 +173,8 @@ class AddStarRating(View):
         if form.is_valid():
             Rating.objects.update_or_create(
                 ip=self.get_client_ip(request),
-                movie_id=int(request.POST.get('movie')),
-                defaults={'star_id': int(request.POST.get('star'))}
+                movie_id=int(request.POST.get("movie")),
+                defaults={"star_id": int(request.POST.get("star"))},
             )
             return HttpResponse(status=201)
         return HttpResponse(status=400)
@@ -182,9 +187,13 @@ class Search(MixinView, ListView):
     search_obj = None
 
     def get_queryset(self):
-        if 'q' in self.request.GET:
-            self.__class__.search_obj = self.request.GET.get('q').capitalize()
-        return Movie.objects.filter(title__icontains=self.__class__.search_obj)
+        if "q" in self.request.GET:
+            self.__class__.search_obj = self.request.GET.get("q").capitalize()
+        return Movie.objects.filter(
+            Q(title__icontains=self.__class__.search_obj)
+            | Q(actors__name__icontains=self.__class__.search_obj)
+            | Q(directors__name__icontains=self.__class__.search_obj)
+        ).distinct()
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
