@@ -26,15 +26,15 @@
                         </ul>
                     </li>
                     {% if user.is_authenticated %}
-                    <li><a href="{% url "users:logout" %}" 
+                    <li><a href="{% url "logout" %}" 
                         style="color: rgb(255, 255, 255); font-weight: 700; text-transform: uppercase;"
                         >Выход</a>
                     {% else %}
-                    <li><a href="{% url "users:login" %}" 
+                    <li><a href="{% url "login" %}" 
                         style="color: rgb(255, 255, 255); font-weight: 700; text-transform: uppercase;"
                         >Вход</a>
                     </li>
-                    <li><a href="{% url "users:register" %}" 
+                    <li><a href="{% url "register" %}" 
                         style="color: rgb(255, 255, 255); font-weight: 700; text-transform: uppercase;"
                         >Регистрация</a>
                     </li>

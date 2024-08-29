@@ -24,8 +24,8 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('pages/', include('django.contrib.flatpages.urls')),
     path('contact/', include('contact.urls')),
+    path('users/', include('users.urls')),
     path('', include('movies.urls')),
-    path('users/', include('users.urls', namespace='users')),
 ]
 
 if settings.DEBUG:

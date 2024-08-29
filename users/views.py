@@ -17,9 +17,7 @@ class UserRegisterView(CreateView):
     template_name = "users/register.html"
     form_class = UserRegisterForm
     extra_context = {"title": "Регистрация"}
-
-    def get_success_url(self) -> str:
-        return reverse_lazy('users:login')
+    success_url = reverse_lazy('login')
 
 
 class UserLogoutView(LogoutView):
