@@ -25,6 +25,7 @@ urlpatterns = [
     path('pages/', include('django.contrib.flatpages.urls')),
     path('contact/', include('contact.urls')),
     path('', include('movies.urls')),
+    path('users/', include('users.urls', namespace='users')),
 ]
 
 if settings.DEBUG:

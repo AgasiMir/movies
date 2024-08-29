@@ -1,7 +1,7 @@
 venv/
 .pylintrc
 __pycache__/
-static/
+
 
 
 fixtures/

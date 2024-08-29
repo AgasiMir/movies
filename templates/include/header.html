@@ -25,7 +25,20 @@
                             {% endfor %}
                         </ul>
                     </li>
-                    <li><a href="contact.html" style="color: rgb(255, 255, 255); font-weight: 700; text-transform: uppercase;">Вход</a></li>
+                    {% if user.is_authenticated %}
+                    <li><a href="{% url "users:logout" %}" 
+                        style="color: rgb(255, 255, 255); font-weight: 700; text-transform: uppercase;"
+                        >Выход</a>
+                    {% else %}
+                    <li><a href="{% url "users:login" %}" 
+                        style="color: rgb(255, 255, 255); font-weight: 700; text-transform: uppercase;"
+                        >Вход</a>
+                    </li>
+                    <li><a href="{% url "users:register" %}" 
+                        style="color: rgb(255, 255, 255); font-weight: 700; text-transform: uppercase;"
+                        >Регистрация</a>
+                    </li>
+                    {% endif %}
                 </ul>
             </nav>
             <!-- //nav -->

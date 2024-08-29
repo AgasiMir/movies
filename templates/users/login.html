@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <section class="ab-info-main py-md-5 py-4 editContent"
+             style="padding-left: 3rem; padding-right: 3rem;">
+        <div class="container">
+            <div class="row">
+                <form method="post">
+                    {% csrf_token %}
+                    {{form.as_p}}
+                <button class="btn1 btn" type='submit'><span aria-hidden="true" ></span>Войти</button>
+                </form>
+            </div>
+        </div>
+    </section>
+{% endblock content %}
