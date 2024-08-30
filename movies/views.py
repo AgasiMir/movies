@@ -114,12 +114,6 @@ class FilterMoviesView(MixinView, ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["year"] = "".join(
-            [f"year={i}&" for i in self.request.GET.getlist("year")]
-        )
-        context["genre"] = "".join(
-            [f"genre={i}&" for i in self.request.GET.getlist("genre")]
-        )
         context["title"] = "Жанры и Года"
         return self.get_mixin_context(context)
 
