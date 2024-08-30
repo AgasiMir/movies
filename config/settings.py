@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     'movies',
     'contact',
     'users',
+    'movies_and_shows',
 
     'django.contrib.sites',
     'django.contrib.flatpages',

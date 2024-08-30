@@ -59,8 +59,9 @@
                 <li style="list-style: none">
                     <span><b>Сборы в США:</b> ${{movie.proper_fees_in_usa}}</span></li>
                 <li style="list-style: none"><span><b>Сборы в мире:</b> ${{movie.proper_fees_in_world}}</span>
+                <br>
                 </li>
-                <li>
+                <listyle="list-style: none">
                     <form action="{% url "add_rating" %}" method='post' name='rating'>
                         <b>Рейтинг:</b>
                         {% csrf_token %}
@@ -77,7 +78,7 @@
                             <span >{{rating.star.value}}</span>
                         {% endfor %}
                     </form>
-                </li>
+                </listyle=>
 
                 <div class="share-desc">
                     <div class="share">
@@ -132,17 +133,34 @@
             {{movie.description}}
         </p>                            
        
-        {% comment %} <p class="editContent" style="outline: none; cursor: inherit;"></p>
-        <p class="mt-3 italic-blue editContent"
-           style="outline: none; cursor: inherit;">
-            <iframe width="560" height="315"
-                    src="https://www.youtube.com/embed/A36LahZNUiE?controls=0"
-                    frameborder="0" allow="accelerometer; autoplay;
-                                                           encrypted-media; gyroscope; picture-in-picture"
-                    allowfullscreen>
-
-            </iframe>
-        </p> {% endcomment %}
+        <div>
+            <!-- Простой плеер -->
+            {% if movie.season.all %}
+                {% for season in movie.season.all %}
+                    <ul>
+                        <li style="list-style: none">
+                            <h3> Сезон {{season.season}}</h3>         
+                                {% for episode in season.episode.all  %}
+                                    <li style="list-style: none">
+                                        <span style='margin-left:10px'>{{ episode }}</span>
+                                        <video
+                                            controls
+                                            src="{{episode.video.url}}" width="100%">
+                                        </video>                        
+                                    </li>
+                                {% endfor %}
+                        </li>
+                    </ul>                
+                {% endfor %}
+            {% else %}
+                {% for v in movie.video_set.all %}
+                    <video
+                        controls
+                        src="{{v.video.url}}" width="100%">
+                    </video>
+                {% endfor %}
+            {% endif %}
+        </div>
        
     </div>
     <hr>
