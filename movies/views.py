@@ -188,7 +188,3 @@ class Search(MixinView, ListView):
             | Q(actors__name__icontains=self.__class__.search_obj)
             | Q(directors__name__icontains=self.__class__.search_obj)
         ).distinct()
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        return self.get_mixin_context(context)
